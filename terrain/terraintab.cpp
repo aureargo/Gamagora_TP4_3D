@@ -3,10 +3,8 @@
 
 
 TerrainTab::TerrainTab(const TerrainTab& copy):
-        height(copy.height),    width(copy.width),  amplitude(copy.amplitude), hauteurMin(copy.hauteurMin), hauteurMax(copy.hauteurMax)
+        Terrain(copy.longueur, copy.largeur, 0), height(copy.height),    width(copy.width),  amplitude(copy.amplitude), hauteurMin(copy.hauteurMin), hauteurMax(copy.hauteurMax)
 {
-    longueur = copy.longueur;
-    largeur = copy.largeur;
     box = copy.box;
     grille = new float[height*width];
     for(int i = 0;  i < height*width;   i++)
@@ -14,6 +12,19 @@ TerrainTab::TerrainTab(const TerrainTab& copy):
     grille2d = new float*[height];
     for(int j = 0;  j < height; j++)
         grille2d[j] = &grille[j*width];
+}
+
+TerrainTab::TerrainTab(TerrainTab && copy):
+        height(copy.height),    width(copy.width),  amplitude(copy.amplitude), hauteurMin(copy.hauteurMin), hauteurMax(copy.hauteurMax)
+{
+    longueur = copy.longueur;
+    largeur = copy.largeur;
+    box = copy.box;
+
+    grille = copy.grille;
+    grille2d = copy.grille2d;
+    copy.grille = nullptr;
+    copy.grille2d = nullptr;
 }
 
 TerrainTab::~TerrainTab()

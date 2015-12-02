@@ -31,6 +31,8 @@ public:
      */
     Terrain(float longueur, float largeur, float amplitude);
 
+    virtual ~Terrain()  {}
+
     /**
      * @brief La boite englobante du terrain. (cf. Box)
      */

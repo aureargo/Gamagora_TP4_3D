@@ -20,7 +20,7 @@ class Node
 {
 public:
     Node();
-    ~Node();
+    virtual ~Node();
     virtual bool inOut(const glm::vec3& p) const = 0;
     virtual float potentiel(const glm::vec3& p) const = 0;
     virtual float distance(const glm::vec3& p) const =0;

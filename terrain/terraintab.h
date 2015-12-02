@@ -19,6 +19,8 @@ public:
      */
     TerrainTab(const TerrainTab& copy);
 
+    TerrainTab(TerrainTab && copy);
+
     /**
      * @param[in] img Image HighMap contenant le relief du terrain.
      * @param[in] longueur Distance du terrain en metre sur l'axe y.
