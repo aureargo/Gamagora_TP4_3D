@@ -93,7 +93,7 @@ public:
      * @param[in] x Position en \e x du point de couleur à déterminer.
      * @param[in] y Position en \e y du point de couleur à déterminer.
      */
-    void getColor(float& r, float& g, float& b, float x, float y) const;
+    vec3 getColor(float x, float y) const;
 
     /**
      * @brief Test si un rayon traverse le terrain. \n
@@ -142,8 +142,12 @@ public:
     float potentiel(const glm::vec3& p) const;
 
 
-    void setColor(const QRgb& color);
-    QRgb getColor(const vec3& p) const;
+    void setColor(const vec3& color);
+    vec3 getColor(const vec3& p) const;
+
+
+    Texture getTexture(const vec3& p) const;
+    Texture getTexture(float x, float y) const;
 
     Box getBox() const;
 

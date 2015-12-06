@@ -3,11 +3,14 @@
 #include "rendu/rayon.h"
 #include <QRgb>
 #include "lib/box.h"
+#include "texturing/lumiere.h"
+
+#include "texturing/texture.h"
 
 
 /** @brief délimite la distance des hauteurs à calculer autour d'un point pour déterminer sa normale*/
 #define RAYON_NORMAL 0.1f
-#define DEFAULT_COLOR qRgb(255,255,255)
+#define DEFAULT_COLOR vec3(1,1,1)
 #define DEFAULT_T 0.5f      //changement d'état entre IN et OUT dans les surfaces implicites
 
 using namespace glm;
@@ -29,8 +32,9 @@ public:
 
     virtual glm::vec3 getNormal(const vec3& p, float eps = RAYON_NORMAL) const = 0;
 
-    virtual void setColor(const QRgb& color) = 0;
-    virtual QRgb getColor(const vec3& p) const;
+    virtual void setColor(const vec3& color) = 0;
+    virtual vec3 getColor(const vec3& p) const;
+    virtual Texture getTexture(const vec3& p) const;
 
     virtual Box getBox() const = 0;
 

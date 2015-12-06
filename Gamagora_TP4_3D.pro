@@ -47,7 +47,9 @@ SOURCES += main.cpp \
     rendu/scene.cpp \
     terrain/terrain.cpp \
     terrain/terrainnoise.cpp \
-    terrain/terraintab.cpp
+    terrain/terraintab.cpp \
+    texturing/texture.cpp \
+    texturing/lumiere.cpp
 
 HEADERS += \
     node.h \
@@ -67,7 +69,9 @@ HEADERS += \
     rendu/scene.h \
     terrain/terrain.h \
     terrain/terrainnoise.h \
-    terrain/terraintab.h
+    terrain/terraintab.h \
+    texturing/texture.h \
+    texturing/lumiere.h
 
 RESOURCES += \
     myresources.qrc

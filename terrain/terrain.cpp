@@ -112,10 +112,58 @@ bool Terrain::intersect(const Rayon& rayon, float &coeffDistance, int &i) const
 }*/
 
 
-void Terrain::getColor(float& r, float& g, float& b, float x, float y) const
+Texture Terrain::getTexture(const vec3& p) const
 {
-    float hauteur = getHauteur(x,y);
-    hauteur /= box.diffZ();
+    return getTexture(p.x, p.y);
+}
+
+Texture Terrain::getTexture(float x, float y) const
+{
+    float h = getHauteur(x,y);
+    float hauteur = h / box.diffZ();
+    vec3 normale = getNormal(x,y);
+    float pente = 1-dot(normale, vec3(0,0,1));
+
+    float roche = 3 + NoiseGenerator::perlinNoiseGradiant2(x, y, 1000) + NoiseGenerator::perlinNoiseGradiant2(x+30, y-60, 103) + NoiseGenerator::perlinNoiseGradiant2(x,y, 3);
+    roche *= 0.25f+pente*0.75f;
+    roche *= 0.40f;
+
+    float herbe = 3 + NoiseGenerator::perlinNoiseGradiant2(x+10100, y+10100, 1234) + NoiseGenerator::perlinNoiseGradiant2(x-100,y-50, 123) + NoiseGenerator::perlinNoiseGradiant2(x-1, y-30,2);
+    herbe *= 0.25f+(1-hauteur)*(1-hauteur)*0.75f;
+    herbe *= 0.40f;
+
+    float neige = 3 + NoiseGenerator::perlinNoiseGradiant2(x+555, y+1010, 1324) + NoiseGenerator::perlinNoiseGradiant2(x-200,y-54, 223) + NoiseGenerator::perlinNoiseGradiant2(x-10, y+12,0.5);
+    neige *= 0.1f+hauteur*hauteur*0.9f;
+    neige *= 0.35f;
+
+    Texture texture;
+    if(herbe > roche && herbe > neige)    {
+        if(herbe > 1)
+            herbe = 1;
+        texture = Herbe(herbe);
+    }
+    else if(roche > herbe && roche > neige)    {
+        if(roche > 1)
+            roche = 1;
+        texture = Roche(roche);
+    }
+    else    {
+        if(neige > 1)
+            neige = 1;
+        texture = Neige(neige);
+    }
+    return texture;
+}
+
+vec3 Terrain::getColor(const vec3& p) const
+{
+    return getColor(p.x, p.y);
+}
+
+vec3 Terrain::getColor(float x, float y) const
+{
+    float h = getHauteur(x,y);
+    float hauteur = h / box.diffZ();
     vec3 normale = getNormal(x,y);
     float pente = 1-dot(normale, vec3(0,0,1));
 
@@ -131,39 +179,24 @@ void Terrain::getColor(float& r, float& g, float& b, float x, float y) const
     neige *= 0.1f+hauteur*hauteur*0.9f;
     neige *= 0.25f;
 
-    /*float   sr = roche*1/0.39f+neige,
-            sg = roche*1/0.36f+herbe+neige,
-            sb = roche*1/0.29f+neige;*/
-/*
-    r = (roche*0.39f+neige)/sr;
-    g = (roche*0.36f+herbe+neige)/sg;
-    b = (roche*0.29f+neige)/sb;
-*/
-    if(herbe > roche && herbe > neige)
-    {
+
+    Texture texture;
+    if(herbe > roche && herbe > neige)    {
         if(herbe > 1)
             herbe = 1;
-        r = 0;
-        g = herbe;
-        b = 0;
-
+        texture = Herbe(herbe);
     }
-    else if(roche > herbe && roche > neige)
-    {
+    else if(roche > herbe && roche > neige)    {
         if(roche > 1)
             roche = 1;
-        r = roche*0.36f;
-        g = roche*0.24f;
-        b = roche*0.07f;
+        texture = Roche(roche);
     }
-    else
-    {
+    else    {
         if(neige > 1)
             neige = 1;
-        r = neige;
-        g = neige;
-        b = neige;
+        texture = Neige(neige);
     }
+    return texture.colorD;
 }
 
 /***********************************************************************/
@@ -179,53 +212,13 @@ float Terrain::distance(const glm::vec3& p) const
 }
 
 
-/*bool Mesh::intersectWithMesh(const Rayon& rayon, float &coeffDistance) const{
-
-    float dmin = 0.0;
-    float dmax = 3000.0;
-
-    if(!englobant.intersect(rayon, dmin, dmax ))
-        return false;
-
-    dmin = 0.0;
-    dmax = 3000.0;
-
-    coeffDistance = dmin;
-
-    for( int i=0; i<256; i++ )
-    {
-        Eigen::vec3 pos = rayon.getOrigine() + coeffDistance*rayon.getDirection();
-        float h = getHauteur( pos.x, pos.y );
-        if(h == HAUTEUR_HORS_MAP)
-            break;
-
-        h = pos.z - h;
-
-        if( h <(0.002 * coeffDistance) ) {
-                return true;
-        }else if(coeffDistance > dmax )
-                break;
-
-        coeffDistance += 0.5*h;
-    }
-
-    return false;
-}*/
 
 
-void Terrain::setColor(const QRgb& color)
+void Terrain::setColor(const vec3& color)
 {
     std::cerr << "le terrain ne doit pas changer de couleur" << std::endl;
     (void) color;
 }
-
-QRgb Terrain::getColor(const vec3& p) const
-{
-    float r,g,b;
-    getColor(r,g,b, p.x,p.y);
-    return qRgb(r*255,g*255,b*255);
-}
-
 
 Box Terrain::getBox() const
 {

@@ -2,6 +2,7 @@
 #define SCENE_H
 
 #include "camera.h"
+#include "texturing/lumiere.h"
 #include "./node.h"
 #include "QTime"
 #include "colorgradient.h"
@@ -35,6 +36,10 @@ public:
         cameras.push_back(c);
     }
 
+    void addL(Lumiere* l){
+        lumieres.push_back((l));
+    }
+
     /**
      * @brief Créer la visualisation de la scène dans une image. Utilise le procédé de lancé de rayons. \n
      * Utilise render().
@@ -55,6 +60,8 @@ private:
      * @brief Liste des caméras dans la scène.
      */
     std::vector<Camera*> cameras;
+
+    std::vector<Lumiere*> lumieres;
 
     /**
      * @brief Couleur de fond

@@ -61,20 +61,16 @@ bool Scene::rendu(){
                         const vec3& dRay = ray.getDirection();
                         const vec3 p2(ray.getOrigine()+dRay*dist);
                         const vec3 n(node->getNormal(p2));
-
-                        double norm = dot(-dRay, n);    //le rayon va normalement dans le sens inverse de la normal du triangle qu'il touche,
-                        //double norm = (1+dot(-dRay, n))*0.5;    //version Galin
-
-                        QRgb color;
-                        if(norm <= 0)
-                            color = qRgb(0,0,0); //Black
-                        else
+                        vec3 color = vec3(0,0,0);
+                        for(Lumiere* l : lumieres)
                         {
-                            //float c = 255*norm;
-                            QRgb c = node->getColor(p2);
-                            color = qRgb(qRed(c)*norm,qGreen(c)*norm, qBlue(c)*norm); // Grey
+                            Texture texture = node->getTexture(p2);
+                            color += phong(*l, texture, p2, n, ray.getOrigine());    //problème à résoudre, regarder que le terrain n'a pas subit une rotation
                         }
-                        img->setPixel(x,y, color);
+                        color = glm::clamp(color, vec3(0,0,0), vec3(1,1,1));
+                        //color /= lumieres.size();
+
+                        img->setPixel(x,y, qRgb(color.r*255, color.g*255, color.b*255));
 
                     #endif
                 }
