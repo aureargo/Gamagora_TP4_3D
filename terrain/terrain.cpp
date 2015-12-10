@@ -130,11 +130,11 @@ Texture Terrain::getTexture(float x, float y) const
 
     float herbe = 3 + NoiseGenerator::perlinNoiseGradiant2(x+10100, y+10100, 1234) + NoiseGenerator::perlinNoiseGradiant2(x-100,y-50, 123) + NoiseGenerator::perlinNoiseGradiant2(x-1, y-30,2);
     herbe *= 0.25f+(1-hauteur)*(1-hauteur)*0.75f;
-    herbe *= 0.40f;
+    herbe *= 0.3f;
 
     float neige = 3 + NoiseGenerator::perlinNoiseGradiant2(x+555, y+1010, 1324) + NoiseGenerator::perlinNoiseGradiant2(x-200,y-54, 223) + NoiseGenerator::perlinNoiseGradiant2(x-10, y+12,0.5);
     neige *= 0.1f+hauteur*hauteur*0.9f;
-    neige *= 0.35f;
+    neige *= 0.40f;
 
     Texture texture;
     if(herbe > roche && herbe > neige)    {

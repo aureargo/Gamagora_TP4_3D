@@ -30,4 +30,12 @@ public:
     float rayon;
 };
 
+const float PI = 3.1415927f;
+
+vec3 aleaSphere();
+vec3 aleaSphere(float rayon);
+
+vec3 aleaDemiSphere();
+vec3 aleaDemiSphere(float rayon);
+
 #endif // SPHERE_H

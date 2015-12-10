@@ -14,8 +14,8 @@ bool Scene::rendu(){
 
     for(unsigned int ic = 0;  ic < cameras.size(); ic++)
     {
-        Camera* c = cameras[ic];
-        int _lu = c->getLu(), _lv = c->getLv();
+        Camera& c = cameras[ic];
+        int _lu = c.getLu(), _lv = c.getLv();
         int pourcent2 = -1;
         QImage *img = new QImage(_lu, _lv, QImage::Format_RGB888);
         QImage eric(_lu, _lv, QImage::Format_RGB888);
@@ -29,12 +29,15 @@ bool Scene::rendu(){
                 pourcent2 = pourcent;
                 std::cout << "\r" << ic << " Rendering: " << pourcent << "% ";  // barre de progression
             }
+            else
+                std::cerr << ".  \b\b";
+
             for(int x = 0; x < _lu ; x++){  // pour chaque pixel de la ligne
-                Rayon ray(c->getOrigine(),c->vecScreen(x,y));   //rayon correspondant au pixel
+                Rayon ray(c.getOrigine(),c.vecScreen(x,y));   //rayon correspondant au pixel
                 bool touche = false;
 
 
-                glm::vec3 p = c->getOrigine();
+                glm::vec3 p = c.getOrigine();
                 int i;
                 float dist = 0;
                 for(i = 0;  i < 512;    i++)
@@ -61,14 +64,23 @@ bool Scene::rendu(){
                         const vec3& dRay = ray.getDirection();
                         const vec3 p2(ray.getOrigine()+dRay*dist);
                         const vec3 n(node->getNormal(p2));
+
+                        Texture texture = node->getTexture(p2);
+
                         vec3 color = vec3(0,0,0);
-                        for(Lumiere* l : lumieres)
+                        float puissance = 0;
+                        for(const Lumiere& l : lumieres)
                         {
-                            Texture texture = node->getTexture(p2);
-                            color += phong(*l, texture, p2, n, ray.getOrigine());    //problème à résoudre, regarder que le terrain n'a pas subit une rotation
+                            float dist2 = glm::distance2(l.pos,p2);
+                            if(dist2 < l.distMax*l.distMax)
+                            {
+                                const vec3 color2 = phong(l, texture, p2, n, ray.getOrigine());    //problème à résoudre, regarder que le terrain n'a pas subit une rotation
+                                color += color2;
+                                puissance+= l.puissance*(1-(dist2/(l.distMax*l.distMax)));
+                            }
                         }
+                        color /= puissance;
                         color = glm::clamp(color, vec3(0,0,0), vec3(1,1,1));
-                        //color /= lumieres.size();
 
                         img->setPixel(x,y, qRgb(color.r*255, color.g*255, color.b*255));
 
@@ -108,3 +120,26 @@ bool Scene::rendu(){
     return true;
 }
 
+
+
+void Scene::setNode(Node* n){
+    node = n;
+}
+
+void Scene::addC(const Camera& c){
+    cameras.push_back(c);
+}
+
+void Scene::addL(const Lumiere& l){
+    lumieres.push_back((l));
+}
+void Scene::addL(const std::vector<Lumiere>& lumieres)
+{
+    if(this->lumieres.empty())
+        this->lumieres = lumieres;
+    else
+    {
+        for(const Lumiere& l: lumieres)
+            this->lumieres.push_back(l);
+    }
+}

@@ -24,21 +24,13 @@ public:
     * @brief ajoute un objet dans la scène
     * @param[in] l'objet à ajouter dans la scène (un terrain pour l'instant)
     */
-    /*void addO(Node* obj){
-        objects.push_back(obj);
-    }*/
-    void setNode(Node* n){
-        node = n;
-    }
+    void setNode(Node* n);
 
     /** @param[in] c camera à ajouter à la scène*/
-    void addC(Camera* c){
-        cameras.push_back(c);
-    }
+    void addC(const Camera& c);
 
-    void addL(Lumiere* l){
-        lumieres.push_back((l));
-    }
+    void addL(const Lumiere& l);
+    void addL(const std::vector<Lumiere>& lumieres);
 
     /**
      * @brief Créer la visualisation de la scène dans une image. Utilise le procédé de lancé de rayons. \n
@@ -59,9 +51,9 @@ private:
     /**
      * @brief Liste des caméras dans la scène.
      */
-    std::vector<Camera*> cameras;
+    std::vector<Camera> cameras;
 
-    std::vector<Lumiere*> lumieres;
+    std::vector<Lumiere> lumieres;
 
     /**
      * @brief Couleur de fond

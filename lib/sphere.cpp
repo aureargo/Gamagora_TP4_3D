@@ -82,3 +82,37 @@ Box Sphere::getBox() const
     vec3 tmp(rayon,rayon,rayon);
     return Box(centre-tmp, centre+tmp);
 }
+
+
+vec3 aleaSphere()
+{
+    float alpha = (rand()%10001)/10000.0;
+    alpha *= PI;  //sur les 180° sur l'axe XZ
+    float theta = (rand()%10001)/10000.0;
+    theta *= 2.f*PI;  //sur les 360° sur l'axe XY
+
+    return vec3(sinf(alpha)*cosf(theta),  sinf(alpha)*sinf(theta),  cosf(alpha));
+    //return vec3(sinf(alpha)*cosf(theta),  cosf(alpha),  sinf(alpha)*sinf(theta));   //Y vers le haut
+}
+
+vec3 aleaSphere(float rayon)
+{
+    return aleaSphere()*rayon;
+}
+
+vec3 aleaDemiSphere()
+{
+    float alpha = (rand()%10001)/10000.0;
+    alpha *= PI/2.f;  //sur les 90° en dessus de l'axe XY
+    float theta = (rand()%10001)/10000.0;
+    theta *= 2.f*PI;  //sur les 360° sur l'axe XY
+
+    return vec3(sinf(alpha)*cosf(theta),  sinf(alpha)*sinf(theta),  cosf(alpha));
+    //return vec3(sinf(alpha)*cosf(theta),  cosf(alpha),  sinf(alpha)*sinf(theta));   //Y vers le haut
+}
+
+vec3 aleaDemiSphere(float rayon)
+{
+    return aleaDemiSphere()*rayon;
+}
+

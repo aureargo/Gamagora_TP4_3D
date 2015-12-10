@@ -2,6 +2,7 @@
 #define LUMIERE_H
 
 #include <glm/vec3.hpp>
+#include <vector>
 
 typedef glm::vec3 vec3;
 #define GRIS vec3(0.5f,0.5f,0.5f)
@@ -23,5 +24,7 @@ public:
     float distMax;
 
 };
+
+std::vector<Lumiere> poissonLumieres(const vec3& center, float rayonSphere, int nbIteration, float rayonProche);
 
 #endif // LUMIERE_H
