@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     Scene scene;
 
     TerrainNoise* terre = new TerrainNoise(4000,4000);
-    scene.addL(poissonLumieres(vec3(terre->largeur/2,terre->longueur/2, 0), std::max(terre->largeur,terre->longueur),1000,100));
+    scene.addL(poissonLumieres(vec3(terre->largeur/2,terre->longueur/2, 0)));
 
     Camera cam = Camera(vec3(-500,2000,1000), vec3(2000,2000,-200), 600,1280,720);
     //Camera cam = Camera(vec3(700,700,300), vec3(800,800,000), 600,720,400);
