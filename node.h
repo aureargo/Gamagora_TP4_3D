@@ -5,7 +5,7 @@
 #include "lib/box.h"
 #include "texturing/lumiere.h"
 
-#include "texturing/texture.h"
+#include "texturing/material.h"
 
 
 /** @brief délimite la distance des hauteurs à calculer autour d'un point pour déterminer sa normale*/
@@ -34,7 +34,7 @@ public:
 
     virtual void setColor(const vec3& color) = 0;
     virtual vec3 getColor(const vec3& p) const;
-    virtual Texture getTexture(const vec3& p) const;
+    virtual Material getMaterial(const vec3& p) const;
 
     virtual Box getBox() const = 0;
 

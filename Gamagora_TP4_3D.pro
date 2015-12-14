@@ -48,8 +48,14 @@ SOURCES += main.cpp \
     terrain/terrain.cpp \
     terrain/terrainnoise.cpp \
     terrain/terraintab.cpp \
-    texturing/texture.cpp \
-    texturing/lumiere.cpp
+    texturing/lumiere.cpp \
+    texturing/material.cpp \
+    texturing/ciel/cielsoleil.cpp \
+    texturing/ciel/ciel.cpp \
+    texturing/ciel/soleil.cpp \
+    lib/vector3.cpp \
+    texturing/phong.cpp \
+    texturing/ciel/cielmultisoleil.cpp
 
 HEADERS += \
     node.h \
@@ -70,8 +76,14 @@ HEADERS += \
     terrain/terrain.h \
     terrain/terrainnoise.h \
     terrain/terraintab.h \
-    texturing/texture.h \
-    texturing/lumiere.h
+    texturing/lumiere.h \
+    texturing/material.h \
+    lib/vector3.h \
+    texturing/ciel/cielsoleil.h \
+    texturing/ciel/soleil.h \
+    texturing/ciel/ciel.h \
+    texturing/phong.h \
+    texturing/ciel/cielmultisoleil.h
 
 RESOURCES += \
     myresources.qrc

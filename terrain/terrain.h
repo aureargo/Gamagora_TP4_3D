@@ -146,8 +146,9 @@ public:
     vec3 getColor(const vec3& p) const;
 
 
-    Texture getTexture(const vec3& p) const;
-    Texture getTexture(float x, float y) const;
+    Material getMaterial(const vec3& p) const;
+    Material getMaterial(float x, float y, float z = 1000000) const;
+    Material getTextureSousSol(float x, float y, float z) const;
 
     Box getBox() const;
 

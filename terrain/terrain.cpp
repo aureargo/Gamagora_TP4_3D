@@ -54,7 +54,7 @@ bool Terrain::inOut(const vec3& pointXYZ) const
     if(pointXYZ.z < 0)
         return false;
     float h = getHauteur(pointXYZ.x, pointXYZ.y);
-    return h != HAUTEUR_HORS_MAP && pointXYZ.z <= h; //
+    return (h != HAUTEUR_HORS_MAP && pointXYZ.z <= h); //
 }
 float Terrain::potentiel(const glm::vec3& p) const
 {
@@ -87,6 +87,9 @@ bool Terrain::intersect(const Rayon& rayon, float &coeffDistance, int &i) const
             else
                 break;
         }
+        /*if(i == 0 && h == 0)
+            h += 0.01;  //dans le cas des lancée de rayon vers le ciel
+        else*/
         h = fabsf(pos.z - h);
 
         if( h <(0.002 * coeffDistance) ) {
@@ -112,14 +115,19 @@ bool Terrain::intersect(const Rayon& rayon, float &coeffDistance, int &i) const
 }*/
 
 
-Texture Terrain::getTexture(const vec3& p) const
+Material Terrain::getMaterial(const vec3& p) const
 {
-    return getTexture(p.x, p.y);
+    return getMaterial(p.x, p.y, p.z);
 }
 
-Texture Terrain::getTexture(float x, float y) const
+Material Terrain::getMaterial(float x, float y, float z) const
 {
     float h = getHauteur(x,y);
+    //if(z+1 < h)
+    //    return getTextureSousSol(x,y,z);    //on retourne une texture de terre;
+    (void) z;
+
+
     float hauteur = h / box.diffZ();
     vec3 normale = getNormal(x,y);
     float pente = 1-dot(normale, vec3(0,0,1));
@@ -136,7 +144,7 @@ Texture Terrain::getTexture(float x, float y) const
     neige *= 0.1f+hauteur*hauteur*0.9f;
     neige *= 0.40f;
 
-    Texture texture;
+    Material texture;
     if(herbe > roche && herbe > neige)    {
         if(herbe > 1)
             herbe = 1;
@@ -153,6 +161,14 @@ Texture Terrain::getTexture(float x, float y) const
         texture = Neige(neige);
     }
     return texture;
+}
+
+Material Terrain::getTextureSousSol(float x, float y, float z) const
+{
+    return Material(vec3(0,0,0));
+    //float roche = 3 + NoiseGenerator::perlinNoiseGradiant2(z, z, 1000) + NoiseGenerator::perlinNoiseGradiant2(z, z, 103) + NoiseGenerator::perlinNoiseGradiant2(z,z, 3);
+    //return Roche(roche/6);
+    (void) x;   (void) y;   (void) z;
 }
 
 vec3 Terrain::getColor(const vec3& p) const
@@ -180,7 +196,7 @@ vec3 Terrain::getColor(float x, float y) const
     neige *= 0.25f;
 
 
-    Texture texture;
+    Material texture;
     if(herbe > roche && herbe > neige)    {
         if(herbe > 1)
             herbe = 1;
@@ -196,7 +212,7 @@ vec3 Terrain::getColor(float x, float y) const
             neige = 1;
         texture = Neige(neige);
     }
-    return texture.colorD;
+    return texture.getColor();
 }
 
 /***********************************************************************/
@@ -208,7 +224,7 @@ float Terrain::distance(const glm::vec3& p) const
     if(dist > 0)
         return dist+0.1f;   //on essaye de rentrer dans la box
     else
-        return (p.z-getHauteur(p))*0.3f;
+        return (p.z-getHauteur(p))*0.25f;
 }
 
 

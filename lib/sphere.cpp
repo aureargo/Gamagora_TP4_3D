@@ -83,6 +83,7 @@ Box Sphere::getBox() const
     return Box(centre-tmp, centre+tmp);
 }
 
+/**************************************************************************************************/
 
 vec3 aleaSphere()
 {
@@ -116,3 +117,63 @@ vec3 aleaDemiSphere(float rayon)
     return aleaDemiSphere()*rayon;
 }
 
+vec3 aleaDemiSphere(const vec3& normal)
+{
+    if(normal == vec3(0,0,1))
+        return aleaDemiSphere();
+
+    vec3 dir(aleaSphere());
+    if(glm::dot(dir, normal) < 0)   //si la direction aleatoire sur la sphere n'est pas dans la demi sphère conduit par la normale, on l'inverse;
+        return -dir;
+    return dir;
+}
+
+vec3 aleaDemiSphere(const vec3& normal, float rayon)
+{
+    return aleaDemiSphere(normal)*rayon;
+}
+
+
+std::vector<vec3> poissonSphere(int nbIteration, float rayonProche)
+{
+    std::vector<vec3> res;
+    res.reserve(nbIteration);
+
+    for(int i = 0;  i < nbIteration;  i++)    {
+        vec3 p = aleaSphere();
+        if(!vec3proche(p, res, rayonProche))
+            res.push_back(p);
+    }
+    //res.shrink_to_fit();
+    return res;
+}
+
+std::vector<vec3> poissonDemiSphere(int nbIteration, float rayonProche)
+{
+    std::vector<vec3> res;
+    res.reserve(nbIteration);
+
+    for(int i = 0;  i < nbIteration;  i++)    {
+        vec3 p = aleaDemiSphere();
+        if(!vec3proche(p, res, rayonProche))
+            res.push_back(p);
+    }
+    //res.shrink_to_fit();
+    return res;
+}
+
+std::vector<vec3> poissonDemiSphere(vec3 normal, int nbIteration, float rayonProche)
+{
+    if(normal == HAUT)
+        return poissonDemiSphere(nbIteration, rayonProche);
+    std::vector<vec3> res;
+    res.reserve(nbIteration);
+
+    for(int i = 0;  i < nbIteration;  i++)    {
+        vec3 p = aleaDemiSphere(normal);
+        if(!vec3proche(p, res, rayonProche))
+            res.push_back(p);
+    }
+    //res.shrink_to_fit();
+    return res;
+}

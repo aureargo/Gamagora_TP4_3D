@@ -15,8 +15,8 @@ vec3 Node::getColor(const vec3& p) const
     (void) p;
 }
 
-Texture Node::getTexture(const vec3& p) const
+Material Node::getMaterial(const vec3& p) const
 {
-    return Texture();
+    return Material();
     (void) p;
 }

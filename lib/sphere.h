@@ -1,8 +1,7 @@
 #ifndef SPHERE_H
 #define SPHERE_H
 
-#include "glm/vec3.hpp"
-#include "glm/gtx/norm.hpp"
+#include "lib/vector3.h"
 #include "rendu/rayon.h"
 #include "box.h"
 
@@ -30,12 +29,17 @@ public:
     float rayon;
 };
 
-const float PI = 3.1415927f;
 
 vec3 aleaSphere();
 vec3 aleaSphere(float rayon);
 
 vec3 aleaDemiSphere();
 vec3 aleaDemiSphere(float rayon);
+vec3 aleaDemiSphere(const vec3& normal);
+vec3 aleaDemiSphere(const vec3& normal, float rayon);
+
+std::vector<vec3> poissonSphere(int nbIteration, float rayonProche);
+std::vector<vec3> poissonDemiSphere(int nbIteration, float rayonProche);
+std::vector<vec3> poissonDemiSphere(vec3 normal, int nbIteration, float rayonProche);
 
 #endif // SPHERE_H

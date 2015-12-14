@@ -1,8 +1,7 @@
 #ifndef RAYON_H
 #define RAYON_H
 
-#include <glm/vec3.hpp>
-#include "glm/gtx/norm.hpp"
+#include "lib/vector3.h"
 #include <math.h>
 
 
