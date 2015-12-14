@@ -13,7 +13,7 @@ Sa position est calculé par intersection entre le rayon partant de l'objet cibl
 class Soleil: public SourceLumiere
 {
 public:
-    Soleil(const SourceLumiere& l, const vec3& dir, float angleMax = 0.1):
+    Soleil(const SourceLumiere& l, const vec3& dir, float angleMax = 0.15):
         SourceLumiere(l),   dir(dir),   angleMax(angleMax)
     {}
 

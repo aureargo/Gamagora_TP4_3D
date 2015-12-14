@@ -2,7 +2,7 @@
 #define MATERIAL_H
 
 #include "lib/vector3.h"
-#define HERBE vec3(0.1,0.75,0.1)
+#define HERBE vec3(0.15,1.0,0.1)
 #define ROCHE vec3(0.36f,0.24f,0.07f)
 #define NEIGE vec3(0.9,0.9,0.9)
 
