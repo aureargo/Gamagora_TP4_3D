@@ -5,12 +5,12 @@
 #include "lib/vector3.h"
 
 #define DISTANCE_MAX_LUMIERE 1000000
-#define NB_RAYONS_CIEL 100
+#define NB_RAYONS_CIEL 200
 
 class SourceLumiere
 {
 public:
-    SourceLumiere(const vec3& color = BLANC, float intensiteA = 0.2, float intensiteD = 1, float intensiteS = 1, float puissance = 1):
+    SourceLumiere(const vec3& color = BLANC, float intensiteA = 0.2, float intensiteD = 1.0, float intensiteS = 1.0, float puissance = 1):
         color(color), ia(intensiteA), id(intensiteD), is(intensiteS), puissance(puissance)
     {}
 
@@ -29,7 +29,7 @@ public:
     vec3 getSpeculaire() const;
     float getPuissance() const;
 
-    void setIntensite(float ambiant = 0.2f, float diffus = 0.7f, float speculaire = 0.1f);
+    void setIntensite(float ambiant = 0.2f, float diffus = 1.0f, float speculaire = 1.0f);
 
 //à mettre dans protected après
     vec3 color;
@@ -44,7 +44,7 @@ class Lumiere : public SourceLumiere
 {
 public:
 
-    Lumiere(const vec3& pos, const vec3& color = BLANC, float intensiteA = 0.2, float intensiteD = 1, float intensiteS = 1, float puissance = 1, float distanceMax = DISTANCE_MAX_LUMIERE):
+    Lumiere(const vec3& pos, const vec3& color = BLANC, float intensiteA = 0.2, float intensiteD = 1.0, float intensiteS = 1.0, float puissance = 1, float distanceMax = DISTANCE_MAX_LUMIERE):
         SourceLumiere(color, intensiteA, intensiteD, intensiteS, puissance), pos(pos), distMax(distanceMax)
     {}
 

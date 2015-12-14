@@ -39,7 +39,7 @@ class Roche: public Material
 {
 public:
     Roche():
-        Material(ROCHE,0.1, 0.85, 0.05, 1)
+        Material(ROCHE,0.2, 0.9, 0.2, 2)
     {}
     Roche(float niveau):
         Roche()
@@ -52,7 +52,7 @@ class Herbe: public Material
 {
 public:
     Herbe():
-        Material(HERBE, 0.2, 0.6, 0.2, 5)
+        Material(HERBE, 0.3, 0.9, 0.6, 5)
     {}
     Herbe(float niveau):
         Herbe()

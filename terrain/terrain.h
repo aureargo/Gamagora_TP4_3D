@@ -150,6 +150,8 @@ public:
     Material getMaterial(float x, float y, float z = 1000000) const;
     Material getTextureSousSol(float x, float y, float z) const;
 
+    void repositionne(vec3 &p) const;
+
     Box getBox() const;
 
 protected:

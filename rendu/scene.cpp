@@ -16,6 +16,8 @@ bool Scene::rendu() const{
     {
         const Camera& c = cameras[ic];
         int _lu = c.getLu(), _lv = c.getLv();
+        std::cout << "ic: " << ic << //"   origine: " << c.getOrigine() <<
+                     "  lu: " << _lu << "  lv: " << _lv << std::endl;
         int pourcent2 = -1;
         QImage *img = new QImage(_lu, _lv, QImage::Format_RGB888);
         QImage eric(_lu, _lv, QImage::Format_RGB888);
@@ -133,7 +135,8 @@ vec3 Scene::calculPixel(const Rayon& ray, float dist, const vec3& oeil) const
     #else
 
         const vec3 dRay = ray.getDirection();
-        const vec3 p(ray.getOrigine() + dRay*dist);
+        vec3 p(ray.getOrigine() + dRay*dist);
+        node->repositionne(p);
         const vec3 n(node->getNormal(p));
 
         Material texture = node->getMaterial(p);

@@ -236,6 +236,11 @@ void Terrain::setColor(const vec3& color)
     (void) color;
 }
 
+void Terrain::repositionne(vec3 &p) const
+{
+    p.z = getHauteur(p);
+}
+
 Box Terrain::getBox() const
 {
     return box;
