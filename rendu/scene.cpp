@@ -19,6 +19,7 @@ bool Scene::rendu() const{
         std::cout << "ic: " << ic << //"   origine: " << c.getOrigine() <<
                      "  lu: " << _lu << "  lv: " << _lv << std::endl;
         int pourcent2 = -1;
+        QImage *imocclusion = new QImage(_lu, _lv, QImage::Format_RGB888);
         QImage *img = new QImage(_lu, _lv, QImage::Format_RGB888);
         QImage eric(_lu, _lv, QImage::Format_RGB888);
         timer.start();
@@ -39,11 +40,13 @@ bool Scene::rendu() const{
 
                 float dist;
                 int i;
+                float oclu;
                 if(!intersect(ray, dist, i))
                     img->setPixel(x, y, default_color.rgba());
                 else
                 {
-                    vec3 color = calculPixel(ray, dist, c.getOrigine());
+                    vec3 color = calculPixel(ray, dist, c.getOrigine(),oclu);
+                    imocclusion->setPixel(x,y,qRgb(color.r*255*(1-oclu),0,0));
                     img->setPixel(x,y, qRgb(color.r*255,color.g*255,color.b*255));
                 }
                 float r,v,b;
@@ -58,7 +61,7 @@ bool Scene::rendu() const{
             //std::cout << (100.f*nbpixrouge) / (_lu*_lv) << "%" << std::endl;
             img->save(("test000" + std::to_string(ic) + ".png").c_str());
             eric.save(("eric" + std::to_string(ic) + ".png").c_str());
-
+            imocclusion->save(("oclu000" + std::to_string(ic) + ".png").c_str());
 
             std::cout << ("test000" + std::to_string(ic) + ".png").c_str() << std::endl;
         }
@@ -75,6 +78,7 @@ bool Scene::rendu() const{
             std::cout << ("test" + std::to_string(ic) + ".png").c_str() << std::endl;
         }
         delete img;
+        delete imocclusion;
     }
     return true;
 }
@@ -108,9 +112,11 @@ bool Scene::intersect(vec3 p, const vec3& n, float& dist, int& i) const
 
 float Scene::calculPoisson(const vec3& pos, const vec3& n, std::vector<Lumiere>& lumieresCiel) const
 {
-    const std::vector<vec3> vecPoisson = poissonDemiSphere(n, NB_RAYONS_CIEL, 0.05);   //liste de vecteur aléatoire de taille 1 dans la demi-sphere de n;
+    //on récupère les directions des rayons lancés vers le ciel
+    const std::vector<vec3> vecPoisson = poissonDemiSphere(NB_RAYONS_CIEL, 0.05);   //liste de vecteur aléatoire de taille 1 dans la demi-sphere de n;
 
     lumieresCiel.reserve(vecPoisson.size());
+
 
     int rayonOmbre = 0; //nombre de rayon ayant été intersecté avant d'atteindre les cieux
     for(const vec3& n2: vecPoisson)
@@ -122,13 +128,13 @@ float Scene::calculPoisson(const vec3& pos, const vec3& n, std::vector<Lumiere>&
             if(ciel != nullptr)
                 lumieresCiel.push_back(ciel->getLumiere(pos, n2));
         }
-        else
+        else //si on n'atteind pas le ciel
             rayonOmbre++;
     }
     return (vecPoisson.size()-rayonOmbre)/((float)vecPoisson.size());
 }
 
-vec3 Scene::calculPixel(const Rayon& ray, float dist, const vec3& oeil) const
+vec3 Scene::calculPixel(const Rayon& ray, float dist, const vec3& oeil, float &oclu) const
 {
     #if 0
         return vec3(dist*0.17, dist*0.19, dist*0.23);
@@ -140,22 +146,25 @@ vec3 Scene::calculPixel(const Rayon& ray, float dist, const vec3& oeil) const
         const vec3 n(node->getNormal(p));
 
         Material texture = node->getMaterial(p);
+        //return texture.getColor();
 
         std::vector<Lumiere> lumieres2;
-        lumieres2.reserve(NB_RAYONS_CIEL+this->lumieres.size());
+        //lumieres2.reserve(NB_RAYONS_CIEL+this->lumieres.size());
         float ombre = calculPoisson(p, n, lumieres2);
+        oclu = ombre;
         if(ombre > 0)
         {
-            for(const Lumiere& l: this->lumieres)
-                lumieres2.push_back(l);
+            //for(const Lumiere& l: this->lumieres)
+                //lumieres2.push_back(l);
 
             vec3 color = phong(texture, p, lumieres2, n, oeil);
-            color *= ombre*ombre;
+            color *= ombre;
             color = glm::clamp(color, vec3(0,0,0), vec3(1,1,1));
             return color;
         }
         else
             return NOIR;
+
 
     #endif
 }

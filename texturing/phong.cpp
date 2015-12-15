@@ -49,8 +49,7 @@ vec3 phong(const Material& t, const vec3& posT, const std::vector<Lumiere>& lumi
                         l.getDiffus() * t.getDiffus() * std::max(0.f,glm::dot(dirL,n)) +
                         l.getSpeculaire() * t.getSpeculaire() * powf(std::max(0.f,glm::dot(R,dirOeil)),t.getBrillance());   //calcul de phong
 
-
-            float puis = l.getPuissance() * (1.f - dist2/(l.getDistMax()*l.getDistMax()));    //plus l'objet est loin de la lumière, plus la puissance d'éclairement est faible [0;1]
+            float puis = l.getPuissance();// * (1.f - dist2/(l.getDistMax()*l.getDistMax()));    //plus l'objet est loin de la lumière, plus la puissance d'éclairement est faible [0;1]
             color2 *= puis;
             color += color2;
             puissance += puis;

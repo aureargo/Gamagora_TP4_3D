@@ -3,7 +3,7 @@
 Lumiere CielSoleil::getLumiere(const vec3& pos, const vec3& n) const
 {
     Lumiere l = Lumiere(SourceLumiere(*this),pos+n*rayon, rayon*2);
-    l.puissance /= NB_RAYONS_CIEL;
+    //l.puissance /= NB_RAYONS_CIEL;
     SourceLumiere sl;
 
     if(soleil.calculLumiere(n, sl))

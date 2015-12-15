@@ -66,7 +66,7 @@ private:
      */
     const QColor default_color = QColor(116, 208, 241);
 
-    vec3 calculPixel(const Rayon& ray, float dist, const vec3& oeil) const;
+    vec3 calculPixel(const Rayon& ray, float dist, const vec3& oeil, float &oclu) const;
 
     bool intersect(const Rayon& r, float& dist, int& i) const;
     bool intersect(vec3 p, const vec3& n, float& dist, int& i) const;

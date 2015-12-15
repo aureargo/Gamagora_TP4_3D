@@ -122,6 +122,19 @@ Material Terrain::getMaterial(const vec3& p) const
 
 Material Terrain::getMaterial(float x, float y, float z) const
 {
+/*
+    Material texture;
+    float h = getHauteur(x,y);
+
+    if(h<50){
+        texture = Herbe();
+    }else if(h>=50 && h<200){
+        texture = Roche();
+    }else{
+        texture = Neige();
+    }
+    return texture;
+*/
     //float h = getHauteur(x,y);
     float h = z;
     //if(z+1 < h)
@@ -238,7 +251,7 @@ void Terrain::setColor(const vec3& color)
 
 void Terrain::repositionne(vec3 &p) const
 {
-    p.z = getHauteur(p)+ 0.01f;
+    p.z = getHauteur(p)+ 0.1f;
 }
 
 Box Terrain::getBox() const

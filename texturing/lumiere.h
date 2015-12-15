@@ -4,8 +4,8 @@
 #include <vector>
 #include "lib/vector3.h"
 
-#define DISTANCE_MAX_LUMIERE 1000000
-#define NB_RAYONS_CIEL 100
+#define DISTANCE_MAX_LUMIERE 100000
+#define NB_RAYONS_CIEL 40
 
 class SourceLumiere
 {

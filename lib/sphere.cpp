@@ -1,5 +1,5 @@
 #include "sphere.h"
-
+#include <QDebug>
 Sphere::Sphere():
     Sphere(vec3(0.f,0.f,0.f), 0)
 {
@@ -152,7 +152,7 @@ std::vector<vec3> poissonDemiSphere(int nbIteration, float rayonProche)
 
     for(int i = 0;  i < nbIteration;  i++)    {
         vec3 p = aleaDemiSphere();
-        if(!vec3proche(p, res, rayonProche))
+        //if(!vec3proche(p, res, rayonProche))
             res.push_back(p);
     }
     //res.shrink_to_fit();
@@ -161,6 +161,17 @@ std::vector<vec3> poissonDemiSphere(int nbIteration, float rayonProche)
 
 std::vector<vec3> poissonDemiSphere(vec3 normal, int nbIteration, float rayonProche)
 {
+    /*
+    std::vector<vec3> res2;
+    res2.reserve(nbIteration);
+    float angle = 3.14f/(float)nbIteration;
+    for(float i = 0; i<3.14f; i+=angle){
+        vec3 p(sin(angle),0,cos(angle));
+        res2.push_back(p);
+    }
+    return res2;
+*/
+
     if(normal == HAUT)
         return poissonDemiSphere(nbIteration, rayonProche);
     std::vector<vec3> res;
@@ -168,7 +179,7 @@ std::vector<vec3> poissonDemiSphere(vec3 normal, int nbIteration, float rayonPro
 
     for(int i = 0;  i < nbIteration;  i++)    {
         vec3 p = aleaDemiSphere(normal);
-        if(!vec3proche(p, res, rayonProche))
+        //if(!vec3proche(p, res, rayonProche))
             res.push_back(p);
     }
     //res.shrink_to_fit();

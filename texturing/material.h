@@ -2,9 +2,10 @@
 #define MATERIAL_H
 
 #include "lib/vector3.h"
-#define HERBE vec3(0.15,1.0,0.1)
-#define ROCHE vec3(0.36f,0.24f,0.07f)
-#define NEIGE vec3(0.9,0.9,0.9)
+#define HERBE vec3(0.2274f,0.6157f,0.1372f)
+//#define ROCHE vec3(0.36f,0.24f,0.07f)
+#define ROCHE vec3(0.5215f,0.4274f,0.302f)
+#define NEIGE vec3(0.996f,0.996f,0.996f)
 
 
 class Material
