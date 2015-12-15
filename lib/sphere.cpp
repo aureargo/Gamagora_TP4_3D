@@ -147,6 +147,36 @@ std::vector<vec3> poissonSphere(int nbIteration, float rayonProche)
 
 std::vector<vec3> poissonDemiSphere(int nbIteration, float rayonProche)
 {
+/*
+    std::vector<vec3> res2;
+    res2.reserve(nbIteration);
+    float angle = 3.14f/(float)nbIteration;
+    for(float i = 0; i<3.14f; i+=angle){
+        vec3 p(sin(angle),0,cos(angle));
+        res2.push_back(p);
+    }
+    return res2;
+*/
+
+    std::vector<vec3> res2;
+    res2.reserve(nbIteration);
+    float alpha = PI/nbIteration;
+    //alpha *= PI/2.f;  //sur les 90° en dessus de l'axe XY
+    float theta = PI/nbIteration;
+    //theta *= 2.f*PI;  //sur les 360° sur l'axe XY
+    for(float i = 0; i<PI; i+=alpha*2.0f){
+        vec3 p(sin(i),0,cos(i));
+        res2.push_back(p);
+    }
+
+    for(float j =0; j<PI; j+=theta*2.0f){
+        vec3 p(0,sin(j),cos(j));
+        res2.push_back(p);
+    }
+    return res2;
+
+
+/*
     std::vector<vec3> res;
     res.reserve(nbIteration);
 
@@ -156,7 +186,7 @@ std::vector<vec3> poissonDemiSphere(int nbIteration, float rayonProche)
             res.push_back(p);
     }
     //res.shrink_to_fit();
-    return res;
+    return res;*/
 }
 
 std::vector<vec3> poissonDemiSphere(vec3 normal, int nbIteration, float rayonProche)

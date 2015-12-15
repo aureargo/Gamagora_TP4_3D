@@ -46,7 +46,7 @@ bool Scene::rendu() const{
                 else
                 {
                     vec3 color = calculPixel(ray, dist, c.getOrigine(),oclu);
-                    imocclusion->setPixel(x,y,qRgb(color.r*255*(1-oclu),0,0));
+                    imocclusion->setPixel(x,y,qRgb(255*(1-oclu),0,0));
                     img->setPixel(x,y, qRgb(color.r*255,color.g*255,color.b*255));
                 }
                 float r,v,b;

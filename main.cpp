@@ -55,7 +55,7 @@ int main(int argc, char *argv[])
 
     //SourceLumiere(vec3(0.25,0.25,0.75),0.2,1,1,1)
     //                                        couleur de base du ciel                  couleur du soleil            direction du soleil dans le ciel
-    Ciel* ciel = new CielSoleil(SourceLumiere(vec3(0.8,0.8,1.0)), Soleil(SourceLumiere(vec3(1,1,0.1),0.2,0.8,0.9,1),glm::normalize(vec3(1,-1,1))));
+    Ciel* ciel = new CielSoleil(SourceLumiere(vec3(0.8,0.8,1.0)), Soleil(SourceLumiere(vec3(1,1,0.1),0.2,0.8,0.9,10),glm::normalize(vec3(1,-1,1))));
     //Ciel* ciel = new Ciel(SourceLumiere());
 
     //Lumiere l = Lumiere(vec3(2000,2000,700));
