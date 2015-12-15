@@ -19,6 +19,7 @@ bool Scene::rendu() const{
         std::cout << "ic: " << ic << //"   origine: " << c.getOrigine() <<
                      "  lu: " << _lu << "  lv: " << _lv << std::endl;
         int pourcent2 = -1;
+        QImage *imEffetAtmos = new QImage(_lu, _lv, QImage::Format_RGB888);
         QImage *imocclusion = new QImage(_lu, _lv, QImage::Format_RGB888);
         QImage *img = new QImage(_lu, _lv, QImage::Format_RGB888);
         QImage eric(_lu, _lv, QImage::Format_RGB888);
@@ -41,12 +42,17 @@ bool Scene::rendu() const{
                 float dist;
                 int i;
                 float oclu;
-                if(!intersect(ray, dist, i))
+                float effetAtmos;
+                if(!intersect(ray, dist, i)){
                     img->setPixel(x, y, default_color.rgba());
+                    imEffetAtmos->setPixel(x,y,default_color.rgba());
+                }
                 else
                 {
                     vec3 color = calculPixel(ray, dist, c.getOrigine(),oclu);
-                    imocclusion->setPixel(x,y,qRgb(color.r*255*(1-oclu),0,0));
+                    color = calculEffetAtmospherique(color, ciel->color, dist, effetAtmos);
+                    imEffetAtmos->setPixel(x,y,qRgb(255,255*(1-effetAtmos),255*(1-effetAtmos)));
+                    imocclusion->setPixel(x,y,qRgb(255*(1-oclu),0,0));
                     img->setPixel(x,y, qRgb(color.r*255,color.g*255,color.b*255));
                 }
                 float r,v,b;
@@ -62,6 +68,7 @@ bool Scene::rendu() const{
             img->save(("test000" + std::to_string(ic) + ".png").c_str());
             eric.save(("eric" + std::to_string(ic) + ".png").c_str());
             imocclusion->save(("oclu000" + std::to_string(ic) + ".png").c_str());
+            imEffetAtmos->save(("EffetAtmos" + std::to_string(ic) + ".png").c_str());
 
             std::cout << ("test000" + std::to_string(ic) + ".png").c_str() << std::endl;
         }
@@ -121,7 +128,7 @@ float Scene::calculPoisson(const vec3& pos, const vec3& n, std::vector<Lumiere>&
     int rayonOmbre = 0; //nombre de rayon ayant été intersecté avant d'atteindre les cieux
     for(const vec3& n2: vecPoisson)
     {
-        vec3 p = pos+n2*0.05f; //on crée un rayon un peu décalé par rapport à notre point et on souhaite l'envoyer vers le ciel.
+        vec3 p = pos + vec3(0,0, node->distance(pos) ) +n2; //on crée un rayon un peu décalé par rapport à notre point et on souhaite l'envoyer vers le ciel.
 
         int i;        float dist;
         if(!intersect(p, n2, dist, i))  {
@@ -158,7 +165,7 @@ vec3 Scene::calculPixel(const Rayon& ray, float dist, const vec3& oeil, float &o
                 //lumieres2.push_back(l);
 
             vec3 color = phong(texture, p, lumieres2, n, oeil);
-            color *= ombre;
+            //color *= ombre;
             color = glm::clamp(color, vec3(0,0,0), vec3(1,1,1));
             return color;
         }
@@ -167,6 +174,27 @@ vec3 Scene::calculPixel(const Rayon& ray, float dist, const vec3& oeil, float &o
 
 
     #endif
+}
+
+vec3 Scene::calculEffetAtmospherique(const vec3 &colorOrigin, const vec3 &colorContribution, const float &distance, float &contribution) const
+{
+    float efficaciteAtmosphere = 2000;
+    contribution = exp(- (distance-3000)/efficaciteAtmosphere );
+
+    if(contribution >= 1){
+        contribution = 1;
+        return colorOrigin;
+    }
+
+    vec3 retour;
+
+    ColorGradient gradient;
+
+    retour = colorOrigin - (colorOrigin-colorContribution)*(1-contribution);
+
+
+
+    return retour;
 }
 
 /**********************************************************/

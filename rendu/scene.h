@@ -72,6 +72,7 @@ private:
     bool intersect(vec3 p, const vec3& n, float& dist, int& i) const;
     float calculPoisson(const vec3& pos, const vec3& n, std::vector<Lumiere>& lumieresCiel) const;
 
+    vec3 calculEffetAtmospherique(const vec3& colorOrigin, const vec3 &colorContribution, const float& distance, float& contribution) const;
 
 };
 
