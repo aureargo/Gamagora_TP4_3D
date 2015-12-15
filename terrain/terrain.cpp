@@ -122,19 +122,19 @@ Material Terrain::getMaterial(const vec3& p) const
 
 Material Terrain::getMaterial(float x, float y, float z) const
 {
-/*
+
     Material texture;
     float h = getHauteur(x,y);
 
-    if(h<50){
+    if(h<100){
         texture = Herbe();
-    }else if(h>=50 && h<200){
+    }else if(h>=100 && h<200){
         texture = Roche();
     }else{
         texture = Neige();
     }
     return texture;
-*/
+/*
     //float h = getHauteur(x,y);
     float h = z;
     //if(z+1 < h)
@@ -173,7 +173,7 @@ Material Terrain::getMaterial(float x, float y, float z) const
             neige = 1;
         texture = Neige(neige);
     }
-    return texture;
+    return texture;*/
 }
 
 Material Terrain::getTextureSousSol(float x, float y, float z) const
