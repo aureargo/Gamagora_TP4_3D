@@ -122,10 +122,10 @@ Material Terrain::getMaterial(const vec3& p) const
 
 Material Terrain::getMaterial(float x, float y, float z) const
 {
-    float h = getHauteur(x,y);
+    //float h = getHauteur(x,y);
+    float h = z;
     //if(z+1 < h)
     //    return getTextureSousSol(x,y,z);    //on retourne une texture de terre;
-    (void) z;
 
 
     float hauteur = h / box.diffZ();

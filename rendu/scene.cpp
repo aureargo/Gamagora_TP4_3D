@@ -150,7 +150,7 @@ vec3 Scene::calculPixel(const Rayon& ray, float dist, const vec3& oeil) const
                 lumieres2.push_back(l);
 
             vec3 color = phong(texture, p, lumieres2, n, oeil);
-            color *= ombre;
+            color *= ombre*ombre;
             color = glm::clamp(color, vec3(0,0,0), vec3(1,1,1));
             return color;
         }

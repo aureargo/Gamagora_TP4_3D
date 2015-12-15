@@ -119,9 +119,6 @@ vec3 aleaDemiSphere(float rayon)
 
 vec3 aleaDemiSphere(const vec3& normal)
 {
-    if(normal == vec3(0,0,1))
-        return aleaDemiSphere();
-
     vec3 dir(aleaSphere());
     if(glm::dot(dir, normal) < 0)   //si la direction aleatoire sur la sphere n'est pas dans la demi sphère conduit par la normale, on l'inverse;
         return -dir;
