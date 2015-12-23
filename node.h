@@ -36,7 +36,7 @@ public:
     virtual vec3 getColor(const vec3& p) const;
     virtual Material getMaterial(const vec3& p) const;
 
-    virtual void repositionne(vec3& p) const = 0;
+    virtual bool repositionne(vec3& p, float max = 1) const = 0;
 
     virtual Box getBox() const = 0;
 

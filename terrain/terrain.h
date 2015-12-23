@@ -105,7 +105,7 @@ public:
      * @param[out] Nombre d'itération durant le ray marching.
      * @return Le resultat du test. True = intersection, false = pas d'intersection.
      */
-     bool intersect(const Rayon& rayon, float &coeffDistance, int &i) const;
+     bool intersect(const Rayon& rayon, float &coeffDistance, int &i, float coeffProgression = 0.3f) const;
 
     inline float getMinElevation() const {return hauteurMin;}
     inline float getMaxElevation() const {return hauteurMax;}
@@ -150,7 +150,7 @@ public:
     Material getMaterial(float x, float y, float z = 1000000) const;
     Material getTextureSousSol(float x, float y, float z) const;
 
-    void repositionne(vec3 &p) const;
+    bool repositionne(vec3 &p, float max = 2) const;
 
     Box getBox() const;
 

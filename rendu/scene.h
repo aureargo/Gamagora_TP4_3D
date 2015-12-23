@@ -11,6 +11,10 @@
 
 #include <QColor>
 #include <QImage>
+#include "terrain/terrain.h"
+
+#define DIST_HORS_PORTEE 9999
+#define MAX_ITERATION 512
 
 /**
     @author Aurelien Argoud
@@ -43,6 +47,8 @@ public:
      */
     bool rendu() const;
 
+    bool renduTerrain() const;
+
 
 private:
 
@@ -66,14 +72,23 @@ private:
      */
     const QColor default_color = QColor(116, 208, 241);
 
-    vec3 calculPixel(const Rayon& ray, float dist, const vec3& oeil, float &oclu) const;
+    vec3 calculPixel(const Rayon& ray, float dist, float &oclu) const;
 
     bool intersect(const Rayon& r, float& dist, int& i) const;
+    bool intersect(const Rayon& r) const;
     bool intersect(vec3 p, const vec3& n, float& dist, int& i) const;
+    bool intersect(vec3 p, const vec3& n) const;
+
     float calculPoisson(const vec3& pos, const vec3& n, std::vector<Lumiere>& lumieresCiel) const;
 
-    vec3 calculEffetAtmospherique(const vec3& colorOrigin, const vec3 &colorContribution, const float& distance, float& contribution) const;
+    float calculOcclusion(const vec3& pos) const;
 
+    vec3 calculEffetAtmospherique(const vec3& colorOrigin, const vec3 &colorContribution, float distance, float& contribution) const;
+
+
+    //performance accru pour un terrain uniquement
+    float calculOcclusionTerrain(const Terrain* terrain, const vec3& pos) const;
+    vec3 calculPixelTerrain(const Terrain* terrain, const Rayon& ray, float dist, float &occlusion) const;
 };
 
 #endif // SCENE_H

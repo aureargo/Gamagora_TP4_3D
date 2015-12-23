@@ -8,14 +8,14 @@
 class CielSoleil:   public Ciel
 {
 public:
-    CielSoleil(const SourceLumiere& l, const Soleil& s, float rayon = DISTANCE_MAX_LUMIERE/2.f):
-        Ciel(l,rayon),   soleil(s)
-    {}
+    CielSoleil(const SourceLumiere& l, const Soleil& s, int nbLumiereMax = 10000, float rayonProche = 0.01f);
+    CielSoleil(const SourceLumiere& sl, const std::vector<Soleil>& soleils, int nbLumiereMax = 10000, float rayonProche = 0.01f);
+    ~CielSoleil() {}
 
+    float getPuissance(int i) const;
+    vec3 phongCiel(const Material& m, const vec3& normal, const vec3& dirOeil);
 
-    Lumiere getLumiere(const vec3& pos, const vec3& n) const;
-
-    Soleil soleil;
+    std::vector<LumiereDir> lumieres;
 };
 
 #endif // CIELSOLEIL_H

@@ -61,10 +61,11 @@ float Terrain::potentiel(const glm::vec3& p) const
     return inOut(p) ?   1.f :   0.f;
 }
 
-bool Terrain::intersect(const Rayon& rayon, float &coeffDistance, int &i) const
+bool Terrain::intersect(const Rayon& rayon, float &coeffDistance, int &i, float coeffProgression) const
 {
     float dmin;
     float dmax;
+    coeffDistance = 0;  i = 0;  //permet de retourner quelquechose de correct dans le eric.png si on ne touche pas la box.
 
     if(!box.intersect(rayon, dmin, dmax ))
         return false;
@@ -75,7 +76,7 @@ bool Terrain::intersect(const Rayon& rayon, float &coeffDistance, int &i) const
 
     coeffDistance = dmin;
 
-    for(i = 0;  i<128;  i++)
+    for(i = 0;  i<256;  i++)
     {
         vec3 pos = rayon.getOrigine() + coeffDistance*rayon.getDirection();
         float h = getHauteur( pos );
@@ -97,7 +98,7 @@ bool Terrain::intersect(const Rayon& rayon, float &coeffDistance, int &i) const
         }else if(coeffDistance > dmax )
                 break;
 
-        coeffDistance += 0.3*h;
+        coeffDistance += coeffProgression*h;
 
     }
 
@@ -122,23 +123,21 @@ Material Terrain::getMaterial(const vec3& p) const
 
 Material Terrain::getMaterial(float x, float y, float z) const
 {
-
     Material texture;
-    float h = getHauteur(x,y);
+    //if(z+1 < h)
+    //    return getTextureSousSol(x,y,z);    //on retourne une texture de terre;
 
-    if(h<100){
+    float h = z;    //getHauteur(x,y);
+
+    /*if(h<100){
         texture = Herbe();
     }else if(h>=100 && h<200){
         texture = Roche();
     }else{
         texture = Neige();
     }
-    return texture;
-/*
-    //float h = getHauteur(x,y);
-    float h = z;
-    //if(z+1 < h)
-    //    return getTextureSousSol(x,y,z);    //on retourne une texture de terre;
+    return texture;*/
+
 
 
     float hauteur = h / box.diffZ();
@@ -157,7 +156,6 @@ Material Terrain::getMaterial(float x, float y, float z) const
     neige *= 0.1f+hauteur*hauteur*0.9f;
     neige *= 0.40f;
 
-    Material texture;
     if(herbe > roche && herbe > neige)    {
         if(herbe > 1)
             herbe = 1;
@@ -173,7 +171,7 @@ Material Terrain::getMaterial(float x, float y, float z) const
             neige = 1;
         texture = Neige(neige);
     }
-    return texture;*/
+    return texture;
 }
 
 Material Terrain::getTextureSousSol(float x, float y, float z) const
@@ -249,9 +247,13 @@ void Terrain::setColor(const vec3& color)
     (void) color;
 }
 
-void Terrain::repositionne(vec3 &p) const
+bool Terrain::repositionne(vec3 &p, float max) const
 {
-    p.z = getHauteur(p)+ 0.1f;
+    float z = getHauteur(p);
+    if(p.z < z-max)
+        return false;
+    p.z = z;
+    return true;
 }
 
 Box Terrain::getBox() const

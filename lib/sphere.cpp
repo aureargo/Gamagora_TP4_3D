@@ -87,9 +87,9 @@ Box Sphere::getBox() const
 
 vec3 aleaSphere()
 {
-    float alpha = (rand()%10001)/10000.0;
+    float alpha = (rand()&0xFFFF)/(float)0xFFFE;
     alpha *= PI;  //sur les 180° sur l'axe XZ
-    float theta = (rand()%10001)/10000.0;
+    float theta = (rand()&0xFFFF)/(float)0xFFFE;
     theta *= 2.f*PI;  //sur les 360° sur l'axe XY
 
     return vec3(sinf(alpha)*cosf(theta),  sinf(alpha)*sinf(theta),  cosf(alpha));
@@ -103,9 +103,9 @@ vec3 aleaSphere(float rayon)
 
 vec3 aleaDemiSphere()
 {
-    float alpha = (rand()%10001)/10000.0;
+    float alpha = (rand()&0xFFFF)/(float)0xFFFE;
     alpha *= PI/2.f;  //sur les 90° en dessus de l'axe XY
-    float theta = (rand()%10001)/10000.0;
+    float theta = (rand()&0xFFFF)/(float)0xFFFE;
     theta *= 2.f*PI;  //sur les 360° sur l'axe XY
 
     return vec3(sinf(alpha)*cosf(theta),  sinf(alpha)*sinf(theta),  cosf(alpha));
@@ -145,19 +145,8 @@ std::vector<vec3> poissonSphere(int nbIteration, float rayonProche)
     return res;
 }
 
-std::vector<vec3> poissonDemiSphere(int nbIteration, float rayonProche)
+std::vector<vec3> poissonDemiSphereTest(int nbIteration, float rayonProche)
 {
-/*
-    std::vector<vec3> res2;
-    res2.reserve(nbIteration);
-    float angle = 3.14f/(float)nbIteration;
-    for(float i = 0; i<3.14f; i+=angle){
-        vec3 p(sin(angle),0,cos(angle));
-        res2.push_back(p);
-    }
-    return res2;
-*/
-
     std::vector<vec3> res2;
     res2.reserve(nbIteration);
     float alpha = PI/nbIteration;
@@ -174,34 +163,25 @@ std::vector<vec3> poissonDemiSphere(int nbIteration, float rayonProche)
         res2.push_back(p);
     }
     return res2;
+}
 
 
-/*
+std::vector<vec3> poissonDemiSphere(int nbIteration, float rayonProche)
+{
     std::vector<vec3> res;
     res.reserve(nbIteration);
 
     for(int i = 0;  i < nbIteration;  i++)    {
         vec3 p = aleaDemiSphere();
-        //if(!vec3proche(p, res, rayonProche))
+        if(!vec3proche(p, res, rayonProche))
             res.push_back(p);
     }
     //res.shrink_to_fit();
-    return res;*/
+    return res;
 }
 
 std::vector<vec3> poissonDemiSphere(vec3 normal, int nbIteration, float rayonProche)
 {
-    /*
-    std::vector<vec3> res2;
-    res2.reserve(nbIteration);
-    float angle = 3.14f/(float)nbIteration;
-    for(float i = 0; i<3.14f; i+=angle){
-        vec3 p(sin(angle),0,cos(angle));
-        res2.push_back(p);
-    }
-    return res2;
-*/
-
     if(normal == HAUT)
         return poissonDemiSphere(nbIteration, rayonProche);
     std::vector<vec3> res;
@@ -209,7 +189,7 @@ std::vector<vec3> poissonDemiSphere(vec3 normal, int nbIteration, float rayonPro
 
     for(int i = 0;  i < nbIteration;  i++)    {
         vec3 p = aleaDemiSphere(normal);
-        //if(!vec3proche(p, res, rayonProche))
+        if(!vec3proche(p, res, rayonProche))
             res.push_back(p);
     }
     //res.shrink_to_fit();

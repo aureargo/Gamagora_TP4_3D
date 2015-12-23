@@ -71,6 +71,36 @@ protected:
     float distMax;
 };
 
+
+/**lumiere directionnelle qui n'est caractérisée que par une direction en plus des autres paramètres de SourceLumiere.
+A utiliser notamment pour le ciel et l'ambiant occlusion (pas besoin de position, juste d'une direction où regarder)*/
+class LumiereDir : public SourceLumiere
+{
+public:
+
+    LumiereDir(const vec3& dir, const vec3& color = BLANC, float intensiteA = 0.2, float intensiteD = 1.0, float intensiteS = 1.0, float puissance = 1):
+        SourceLumiere(color, intensiteA, intensiteD, intensiteS, puissance), dir(dir)
+    {}
+
+    LumiereDir(const LumiereDir& copy):
+        SourceLumiere(copy), dir(copy.dir)
+    {}
+    LumiereDir(LumiereDir&& copy):
+        SourceLumiere(copy), dir(copy.dir)
+    {}
+
+    LumiereDir(const SourceLumiere& sl, const vec3& dir):
+        SourceLumiere(sl),  dir(dir)
+    {}
+
+
+    void operator=(const LumiereDir& l);
+    void operator=(LumiereDir&& l);
+
+    vec3 dir;
+
+};
+
 /*********************************************************************************************/
 
 std::vector<Lumiere> poissonLumieres(const vec3& center, float rayonSphere = DISTANCE_MAX_LUMIERE/2.f, int nbIteration = 10000, float rayonProche=10000);

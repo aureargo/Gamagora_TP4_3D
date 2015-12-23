@@ -70,6 +70,27 @@ void Lumiere::operator=(Lumiere&& l)
     distMax = l.distMax;
 }
 
+/*******************************/
+
+void LumiereDir::operator=(const LumiereDir& l){
+    color = l.color;
+    ia = l.ia;
+    id = l.id;
+    is = l.is;
+    puissance = l.puissance;
+    dir = l.dir;
+}
+
+void LumiereDir::operator=(LumiereDir&& l)
+{
+    color = l.color;
+    ia = l.ia;
+    id = l.id;
+    is = l.is;
+    puissance = l.puissance;
+    dir = l.dir;
+}
+
 /*bool lumiereProche(const Lumiere& l, const vec3& pos, float rayonProche)
 {
     return (glm::distance2(pos, l.pos) < rayonProche*rayonProche);

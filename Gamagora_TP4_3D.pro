@@ -55,7 +55,7 @@ SOURCES += main.cpp \
     texturing/ciel/soleil.cpp \
     lib/vector3.cpp \
     texturing/phong.cpp \
-    texturing/ciel/cielmultisoleil.cpp
+    rendu/sceneTerrain.cpp
 
 HEADERS += \
     node.h \
@@ -82,8 +82,7 @@ HEADERS += \
     texturing/ciel/cielsoleil.h \
     texturing/ciel/soleil.h \
     texturing/ciel/ciel.h \
-    texturing/phong.h \
-    texturing/ciel/cielmultisoleil.h
+    texturing/phong.h
 
 RESOURCES += \
     myresources.qrc

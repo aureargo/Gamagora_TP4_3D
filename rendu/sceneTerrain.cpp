@@ -1,16 +1,11 @@
-﻿#include "scene.h"
+#include "scene.h"
 
-
-Scene::Scene()
-{
-}
-
-
-bool Scene::rendu() const{
+bool Scene::renduTerrain() const{
 
 
     ColorGradient grad;
     grad.createDefaultHeatMapGradient();
+    const Terrain* terrain = (Terrain*) node;
 
     for(unsigned int ic = 0;  ic < cameras.size(); ic++)
     {
@@ -42,22 +37,22 @@ bool Scene::rendu() const{
 
                 float dist;
                 int i;
-                float oclu;
-                float effetAtmos;
-                if(!intersect(ray, dist, i)){
+
+                if(!terrain->intersect(ray,dist,i)){
                     img.setPixel(x, y, default_color.rgba());
-                    imEffetAtmos.setPixel(x,y,default_color.rgba());
                 }
                 else
                 {
-                    vec3 color = calculPixel(ray, dist, oclu);
+                    float oclu;
+                    float effetAtmos;
+                    vec3 color = calculPixelTerrain(terrain, ray, dist, oclu);
                     color = calculEffetAtmospherique(color, ciel->color, dist, effetAtmos);
                     imEffetAtmos.setPixel(x,y,qRgb(255,255*(1-effetAtmos),255*(1-effetAtmos)));
-                    imocclusion.setPixel(x,y,qRgb(255*(1-oclu),0,255*(oclu)));
+                    imocclusion.setPixel(x,y,qRgb(255*(1-oclu),0,255*(oclu*oclu)));
                     img.setPixel(x,y, qRgb(color.r*255,color.g*255,color.b*255));
                 }
                 float r,v,b;
-                grad.getColorAtValue(i/(float)MAX_ITERATION,r,v,b);
+                grad.getColorAtValue(i/(float)256,r,v,b);
                 eric.setPixel(x,y, qRgb(r*255,v*255,b*255));
             }
         }
@@ -102,55 +97,10 @@ bool Scene::rendu() const{
     return true;
 }
 
-/*****************************************************/
-
-bool Scene::intersect(const Rayon& r, float& dist, int& i) const
-{
-    return intersect(r.getOrigine(), r.getDirection(), dist, i);
-}
-bool Scene::intersect(const Rayon& r) const
-{
-    return intersect(r.getOrigine(), r.getDirection());
-}
-
-
-bool Scene::intersect(vec3 p, const vec3& n, float& dist, int& i) const
-{
-    dist = 0;
-    for(i = 0;  i < MAX_ITERATION;    i++)
-    {
-        if(node->inOut(p))
-            return true;
-
-        float d = node->distance(p)+0.001f*i;
-        dist += d;
-        if(dist > DIST_HORS_PORTEE) //si on va trop loin, on arrête la progression.
-            return false;
-        p += n*(d);
-    }
-    return false;
-}
-
-bool Scene::intersect(vec3 p, const vec3& n) const
-{
-    float dist = 0;
-    for(int i = 0;  i < MAX_ITERATION;    i++)
-    {
-        if(node->inOut(p))
-            return true;
-
-        float d = node->distance(p)+0.001f*i;
-        dist += d;
-        if(dist > DIST_HORS_PORTEE) //si on va trop loin, on arrête la progression.
-            return false;
-        p += n*(d);
-    }
-    return false;
-}
 
 /*****************************************************/
 
-float Scene::calculOcclusion(const vec3& pos) const
+float Scene::calculOcclusionTerrain(const Terrain* terrain, const vec3& pos) const
 {
     if(ciel == nullptr)
         return 1;
@@ -163,26 +113,26 @@ float Scene::calculOcclusion(const vec3& pos) const
         somme += puis;
 
         vec3 p = pos + dir*0.1f;   //un peu déplacer pour ne pas démarrer pile sur le terrain et avancer de 0
-        if(!intersect(p, dir))
+        float dist; int j;
+        if(!terrain->intersect(Rayon(p,dir), dist, j, 1.f))
             occlusion+= puis;
     }
     return occlusion/somme;
 }
 
-vec3 Scene::calculPixel(const Rayon& ray, float dist, float &occlusion) const
+vec3 Scene::calculPixelTerrain(const Terrain* terrain, const Rayon& ray, float dist, float &occlusion) const
 {
     #if 0
         return vec3(dist*0.17, dist*0.19, dist*0.23);
     #else
-
         const vec3 dRay = ray.getDirection();
         vec3 p(ray.getOrigine() + dRay*dist);
-        if(!node->repositionne(p))
+        if(!terrain->repositionne(p))
             return NOIR;    //on est trop profond dans le terrain, ce qui peut vouloir dire qu'on regarde sous le terrain à la bordure
 
-        const vec3 n(node->getNormal(p));
+        const vec3 n(terrain->getNormal(p));
 
-        Material texture = node->getMaterial(p);
+        Material texture = terrain->getMaterial(p);
         //return texture.getColor();
 
         occlusion = calculOcclusion(p);
@@ -198,48 +148,5 @@ vec3 Scene::calculPixel(const Rayon& ray, float dist, float &occlusion) const
         }
         else
             return NOIR;
-
     #endif
-}
-
-vec3 Scene::calculEffetAtmospherique(const vec3 &colorOrigin, const vec3 &colorContribution, float distance, float &contribution) const
-{
-    float efficaciteAtmosphere = 2000;
-    contribution = exp(- (distance-3000)/efficaciteAtmosphere );
-
-    if(contribution >= 1){
-        contribution = 1;
-        return colorOrigin;
-    }
-
-    return colorOrigin - (colorOrigin-colorContribution)*(1-contribution);
-}
-
-/**********************************************************/
-
-void Scene::setNode(Node* n){
-    node = n;
-}
-
-void Scene::addC(const Camera& c){
-    cameras.push_back(c);
-}
-
-void Scene::addL(const Lumiere& l){
-    lumieres.push_back((l));
-}
-void Scene::addL(const std::vector<Lumiere>& lumieres)
-{
-    if(this->lumieres.empty())
-        this->lumieres = lumieres;
-    else
-    {
-        for(const Lumiere& l: lumieres)
-            this->lumieres.push_back(l);
-    }
-}
-
-void Scene::setCiel(Ciel* ciel)
-{
-    this->ciel = ciel;
 }
